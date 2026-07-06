@@ -1,12 +1,9 @@
 name: Generate Organization Metrics
 
 on:
-  # Schedule daily updates at midnight UTC
   schedule:
     - cron: "0 0 * * *"
-  # Manual trigger
   workflow_dispatch:
-  # Trigger on push to main/master
   push:
     branches: ["main", "master"]
 
@@ -19,36 +16,14 @@ jobs:
       - name: Generate Organization Metrics
         uses: lowlighter/metrics@latest
         with:
-          # Your Personal Access Token (must have 'read:org' scope)
           token: ${{ secrets.METRICS_TOKEN }}
-
-          # Set to your organization name
           user: UATAS-BetaTeam
-
-          # Output filename (saved in the repo root)
           filename: github-metrics.svg
-
-          # Template style
           template: classic
-
-          # Base sections to display
           base: header, activity, community, repositories, metadata
-
+          
           # ============================================
-          # REPOSITORIES PLUGIN (shows repos in the org)
-          # ============================================
-          plugin_repositories: yes
-          # Show pinned repos (max 6)
-          plugin_repositories_pinned: 6
-          # Show most starred repos
-          plugin_repositories_starred: 10
-          # Include forked repos
-          plugin_repositories_forks: yes
-          # Affiliations: owner, collaborator, organization_member
-          plugin_repositories_affiliations: organization_member
-
-          # ============================================
-          # LANGUAGES PLUGIN
+          # LANGUAGES (works fine for orgs)
           # ============================================
           plugin_languages: yes
           plugin_languages_analysis_timeout: 15
@@ -60,9 +35,9 @@ jobs:
           plugin_languages_recent_load: 300
           plugin_languages_sections: most-used
           plugin_languages_threshold: 0%
-
+          
           # ============================================
-          # ACTIVITY PLUGIN
+          # ACTIVITY (works fine for orgs)
           # ============================================
           plugin_activity: yes
           plugin_activity_limit: 5
@@ -70,58 +45,55 @@ jobs:
           plugin_activity_days: 14
           plugin_activity_filter: all
           plugin_activity_visibility: all
-
+          
           # ============================================
-          # FOLLOWUP PLUGIN (issues & PRs tracking)
+          # FOLLOWUP — ISSUES & PRs (only from members, NOT communities)
           # ============================================
           plugin_followup: yes
           plugin_followup_sections: repositories
           plugin_followup_indepth: yes
           plugin_followup_archived: yes
-
+          
           # ============================================
-          # CONTRIBUTORS PLUGIN
+          # STARGAZERS — WITHOUT Google Maps (clean version)
+          # ============================================
+          plugin_stargazers: yes
+          plugin_stargazers_charts_type: classic
+          plugin_stargazers_charts: yes
+          plugin_stargazers_days: 14
+          # REMOVED: plugin_stargazers_worldmap (requires Google Maps API key)
+          
+          # ============================================
+          # CONTRIBUTORS (works fine for orgs)
           # ============================================
           plugin_contributors: yes
           plugin_contributors_base: ""
           plugin_contributors_head: main
           plugin_contributors_ignored: github-actions[bot], dependabot[bot]
           plugin_contributors_contributions: commits, pull_requests, issues
-
+          
           # ============================================
-          # STARGAZERS PLUGIN
+          # REPOSITORIES LIST (pinned repos, works for orgs)
           # ============================================
-          plugin_stargazers: yes
-          plugin_stargazers_charts_type: classic
-          plugin_stargazers_charts: yes
-          plugin_stargazers_days: 14
-          plugin_stargazers_worldmap: yes
-          plugin_stargazers_worldmap_sample: 7
-
-          # ============================================
-          # STARS PLUGIN (most starred repos)
-          # ============================================
-          plugin_stars: yes
-          plugin_stars_limit: 4
-
-          # ============================================
-          # TRAFFIC PLUGIN (views/clones stats)
-          # ============================================
-          # Requires 'repo' scope on token for private repos
-          # plugin_traffic: yes
-
+          plugin_repositories: yes
+          plugin_repositories_pinned: 6
+          plugin_repositories_featured: ""
+          plugin_repositories_starred: 0
+          plugin_repositories_random: 0
+          plugin_repositories_forks: yes
+          plugin_repositories_affiliations: organization_member
+          
           # ============================================
           # GENERAL CONFIG
           # ============================================
           config_timezone: UTC
           config_twemoji: yes
-          config_order: header, repositories, activity, community, languages, followup, stargazers, stars
-
-          # Display settings
           config_display: large
           config_animations: yes
-
-          # Output action: commit to repo
+          
+          # Clean layout order (no stars plugin, no worldmap)
+          config_order: header, repositories, activity, languages, followup, stargazers, contributors
+          
           output_action: commit
-          committer_message: "chore: update metrics"
+          committer_message: "chore: update org metrics"
           committer_token: ${{ secrets.GITHUB_TOKEN }}
