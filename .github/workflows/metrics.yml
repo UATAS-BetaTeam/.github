@@ -23,7 +23,21 @@ jobs:
           base: header, activity, community, repositories, metadata
           
           # ============================================
-          # LANGUAGES (works fine for orgs)
+          # VISUAL STYLING — Makes it look much cleaner
+          # ============================================
+          # Use columns layout for better desktop/mobile fit
+          config_display: columns
+          # Consistent emoji rendering across all platforms
+          config_twemoji: yes
+          # Enable smooth CSS animations
+          config_animations: yes
+          # Better padding to prevent cropping/oversizing
+          config_padding: 0, 6 + 8%
+          # Self-contained SVG (no external image links)
+          config_base64: yes
+          
+          # ============================================
+          # LANGUAGES
           # ============================================
           plugin_languages: yes
           plugin_languages_analysis_timeout: 15
@@ -37,7 +51,7 @@ jobs:
           plugin_languages_threshold: 0%
           
           # ============================================
-          # ACTIVITY (works fine for orgs)
+          # ACTIVITY
           # ============================================
           plugin_activity: yes
           plugin_activity_limit: 5
@@ -47,7 +61,7 @@ jobs:
           plugin_activity_visibility: all
           
           # ============================================
-          # FOLLOWUP — ISSUES & PRs (only from members, NOT communities)
+          # FOLLOWUP — Issues & PRs (only org repos, no communities)
           # ============================================
           plugin_followup: yes
           plugin_followup_sections: repositories
@@ -55,16 +69,7 @@ jobs:
           plugin_followup_archived: yes
           
           # ============================================
-          # STARGAZERS — WITHOUT Google Maps (clean version)
-          # ============================================
-          plugin_stargazers: yes
-          plugin_stargazers_charts_type: classic
-          plugin_stargazers_charts: yes
-          plugin_stargazers_days: 14
-          # REMOVED: plugin_stargazers_worldmap (requires Google Maps API key)
-          
-          # ============================================
-          # CONTRIBUTORS (works fine for orgs)
+          # CONTRIBUTORS
           # ============================================
           plugin_contributors: yes
           plugin_contributors_base: ""
@@ -73,7 +78,7 @@ jobs:
           plugin_contributors_contributions: commits, pull_requests, issues
           
           # ============================================
-          # REPOSITORIES LIST (pinned repos, works for orgs)
+          # REPOSITORIES — Pinned only (no featured/starred to avoid errors)
           # ============================================
           plugin_repositories: yes
           plugin_repositories_pinned: 6
@@ -84,16 +89,52 @@ jobs:
           plugin_repositories_affiliations: organization_member
           
           # ============================================
-          # GENERAL CONFIG
+          # CUSTOM CSS — Extra polish for a premium look
           # ============================================
-          config_timezone: UTC
-          config_twemoji: yes
-          config_display: large
-          config_animations: yes
+          extras_css: |
+            /* Premium dark theme styling */
+            svg {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif !important;
+            }
+            /* Section headers styling */
+            h2 {
+              font-size: 16px !important;
+              font-weight: 600 !important;
+              letter-spacing: 0.3px !important;
+              margin-bottom: 12px !important;
+            }
+            /* Better spacing between sections */
+            .section {
+              margin-bottom: 24px !important;
+            }
+            /* Refined card-like feel for repo items */
+            .repository {
+              border-radius: 8px !important;
+              padding: 8px 12px !important;
+              margin: 4px 0 !important;
+              transition: all 0.2s ease !important;
+            }
+            /* Language bar styling */
+            .language {
+              border-radius: 4px !important;
+            }
+            /* Smooth hover effects */
+            .repository:hover {
+              background: rgba(255,255,255,0.05) !important;
+            }
+            /* Better typography for stats */
+            .metric {
+              font-variant-numeric: tabular-nums !important;
+            }
           
-          # Clean layout order (no stars plugin, no worldmap)
-          config_order: header, repositories, activity, languages, followup, stargazers, contributors
+          # ============================================
+          # LAYOUT ORDER — Clean, logical flow
+          # ============================================
+          config_order: header, repositories, activity, languages, followup, contributors
           
+          # ============================================
+          # OUTPUT
+          # ============================================
           output_action: commit
           committer_message: "chore: update org metrics"
           committer_token: ${{ secrets.GITHUB_TOKEN }}
