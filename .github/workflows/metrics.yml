@@ -4,13 +4,17 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+# Grant write access to the repository
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: lowlighter/metrics@latest
         with:
-          token: ${{ secrets.METRICS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}   # <-- use GITHUB_TOKEN
           user: UATAS-BetaTeam
           output: svg
           filename: metrics.organization.svg
