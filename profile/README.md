@@ -1,1 +1,1 @@
-![Organization Language Stats](https://github.com/UATAS-BetaTeam/.github/blob/main/metrics.organization.svg)
+![Organization Metrics](/github-metrics.svg)
