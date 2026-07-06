@@ -1,8 +1,8 @@
 name: Metrics
 on:
   schedule:
-    - cron: "0 0 * * *" # runs daily at midnight
-  workflow_dispatch: # allows manual trigger
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,7 +14,6 @@ jobs:
           user: UATAS-BetaTeam
           output: svg
           filename: metrics.organization.svg
-
           base: header, activity, community, repositories, metadata
           plugin_languages: yes
           plugin_languages_details: percentage, bytes-size
